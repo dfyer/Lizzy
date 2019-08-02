@@ -1,0 +1,33 @@
+{
+    "manifest_version": 2,
+
+    "name": "Lizzy",
+    "version": "0.2.0",
+    "description": "A Personalized New Tab",
+
+    "chrome_url_overrides": {
+        "newtab": "newpage.html"
+    },
+
+    "content_scripts": [
+        {
+            "js": [
+                "content.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+
+    "permissions": [
+        "https://www.googleapis.com/youtube/",
+        "tabs",
+        "topSites"
+    ]
+}
