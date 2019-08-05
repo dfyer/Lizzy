@@ -1,5 +1,15 @@
+@font-face {
+  font-family: BowhouseLight;
+  font-weight: bold;
+  src: url("fonts/Bowhouse-Light.woff") format("woff");
+}
+@font-face {
+  font-family: AdventProThin;
+  font-weight: bold;
+  src: url("fonts/AdventPro/AdventPro-Thin.ttf") format('truetype');
+}
 body {
-  margin:0; 
+  margin:0;
   background: rgb(25, 23, 28);
   background-image: url("wallpaper.jpg");
 }
@@ -19,27 +29,32 @@ body {
   padding-bottom: 35px;
   text-align: center;
 }
-#date-text,
+#date-text {
+  font-weight: 100;
+}
 #time-text {
-  font-family: 'Spoqa Han Sans Light', 'Spoqa Han Sans JP', 'Sans-serif';
+  font-weight: 100;
 }
 #date-text {
-  font-weight: 200 !important;
-  font-size: 37px; 
-  letter-spacing: 9px;
+  font-size: 27px;
   text-align:center;
 }
 #time-text {
-  font-weight: 900 !important;
-  font-size: 65px; 
+  font-size: 65px;
 }
 #time-text .digits {
-  display:inline-block;
-  width:100px;
+  width:170px;
+}
+#time-text #tth {
+  text-align:right;
+}
+#time-text #ttm {
+  text-align:left;
 }
 #time-text .colon {
   display:inline-block;
-  width:15px;
+  width:14px;
+  margin: 0 3px;
 }
 /* Time */
 /*** HEADER ROW ***/
@@ -156,7 +171,7 @@ body {
   padding: 5px 10px;
   font-family: 'Spoqa Han Sans Light', 'Spoqa Han Sans JP', 'Sans-serif';
   font-weight: 400 !important;
-  font-size: 20px !important; 
+  font-size: 20px !important;
   color: white;
 }
 .h-content {
@@ -173,7 +188,7 @@ body {
   line-height: 30px;
   font-family: 'Spoqa Han Sans Light', 'Spoqa Han Sans JP', 'Sans-serif';
   font-weight: 400 !important;
-  font-size: 15px; 
+  font-size: 15px;
 }
 .h-content li.item:hover,
 .h-content li.item:focus,

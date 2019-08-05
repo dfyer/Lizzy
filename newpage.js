@@ -1,13 +1,17 @@
-// Clock
+// Time
 function getDayOfWeek(idx) {
-  if (idx == 0) { return "SUN"; }
-  else if (idx == 1) { return "MON"; }
-  else if (idx == 2) { return "TUE"; }
-  else if (idx == 3) { return "WED"; }
-  else if (idx == 4) { return "WED"; }
-  else if (idx == 5) { return "FRI"; }
-  else if (idx == 6) { return "SAT"; }
+  if (idx == 0) { return "Sunday"; }
+  else if (idx == 1) { return "Monday"; }
+  else if (idx == 2) { return "Tuesday"; }
+  else if (idx == 3) { return "Wednesday"; }
+  else if (idx == 4) { return "Thursday"; }
+  else if (idx == 5) { return "Friday"; }
+  else if (idx == 6) { return "Saturday"; }
   else { return ''; }
+}
+function getMonthName(idx) {
+  const monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+  return monthNames[idx];
 }
 function formatInt(num, length) {
   var r = "" + num;
@@ -20,23 +24,13 @@ function getTime() {
   let date_text = document.getElementById("date-text");
   let tth = document.getElementById("tth");
   let ttm = document.getElementById("ttm");
-  let tts = document.getElementById("tts");
 
   let now = new Date();
-  let year = now.getFullYear().toString().substring(2);
-  let month = formatInt((now.getMonth()+1).toString(), 2);
-  let date = formatInt(now.getDate().toString(), 2);
   let dow = getDayOfWeek(now.getDay());
-  let hour = formatInt(now.getHours(), 2);
-  let min = formatInt(now.getMinutes(), 2);
-  let sec = formatInt(now.getSeconds(), 2);
+  date_text.innerHTML = dow + ", " + getMonthName(now.getMonth()) + " " + now.getDate();
 
-  let nowDate = year + "/" + month + "/" + date + " " + dow;
-  date_text.innerHTML = nowDate;
-
-  tth.innerHTML = hour;
-  ttm.innerHTML = min;
-  tts.innerHTML = sec;
+  tth.innerHTML = formatInt(now.getHours(), 2);
+  ttm.innerHTML = formatInt(now.getMinutes(), 2);
 }
 
 // Result Builders
@@ -79,7 +73,7 @@ function buildYoutubesList(result, detail) {
   // Add new search result
   let ul = youtubeDiv.appendChild(document.createElement('ul'));
   ul.setAttribute("id", "youtubes-ul");
-  
+
   for (let i = 0; i < result.items.length; i++) {
     let li = ul.appendChild(document.createElement('li'));
     let a = li.appendChild(document.createElement('a'));
@@ -89,7 +83,7 @@ function buildYoutubesList(result, detail) {
     a.appendChild(thumbnail);
     a.appendChild(document.createTextNode(result.items[i].snippet.title));
   }
-  
+
   // Set display
   document.getElementById('youtubes').setAttribute("style", "display:block;");
 }
@@ -111,7 +105,7 @@ function buildTwitchList(result) {
   // Add new search result
   let ul = tstreamDiv.appendChild(document.createElement('ul'));
   ul.setAttribute("id", "tstreams-ul");
-  
+
   for (let i = 0; i < result.streams.length; i++) {
     let li = ul.appendChild(document.createElement('li'));
     let a = li.appendChild(document.createElement('a'));
@@ -121,13 +115,13 @@ function buildTwitchList(result) {
     a.appendChild(thumbnail);
     a.appendChild(document.createTextNode(result.streams[i].channel.status));
   }
-  
+
   // Set display
   document.getElementById('tstreams').setAttribute("style", "display:block;");
 }
 
 // Helper for result builders
-function hideResults() { 
+function hideResults() {
   //document.getElementById('topsites').setAttribute("style", "display:none;");
   document.getElementById('youtubes').setAttribute("style", "display:none;");
   document.getElementById('tstreams').setAttribute("style", "display:none;");
@@ -223,7 +217,7 @@ function loadTwitch() {
   let twitchUrl = "https://api.twitch.tv/kraken/streams/followed";
 
   console.log(twitchUrl);
-  
+
   // Create and send request with XHR
   let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
@@ -246,14 +240,14 @@ window.onload = function() {
   getTime();
   setInterval(function() {
     getTime();
-  }, 1000);
+  }, 60000);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   // Bind Event Handlers
   document.getElementById("btn-youtubes").addEventListener("click", loadYoutube);
   document.getElementById("btn-tstreams").addEventListener("click", loadTwitch);
-  
+
   // Bind key
   document.getElementById("q-string").addEventListener("keyup", function(event) {
     // Number 13 is the "Enter" key on the keyboard
