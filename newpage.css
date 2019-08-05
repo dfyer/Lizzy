@@ -10,8 +10,8 @@
 }
 body {
   margin:0;
-  background: rgb(25, 23, 28);
-  background-image: url("wallpaper.jpg");
+  background: #fff;
+  /*background-image: url("wallpaper.jpg");*/
 }
 #content {
   width: 900px;
@@ -95,6 +95,8 @@ body {
 }
 .h-container .favicon-wrapper a img {
   display: block;
+  width: 16px;
+  height: 16px;
   padding: 4px 4px;
   background: #fff;
   border-radius: 4px;
@@ -116,6 +118,24 @@ body {
 #input-area {
   text-align: center;
 }
+#input-area #youtube-icon {
+  display: inline-block;
+  height: 26px;
+  width:32px;
+  padding:2px 5px;
+  margin:0;
+  border: none;
+  vertical-align:middle;
+  background: rgba(255, 0, 4, 1);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border: 1px solid #bbb;
+  cursor:pointer;
+  color: #fff;
+}
+#input-area #youtube-icon #youtube-icon-wrapper {
+    line-height:30px;
+}
 #input-area #q-string {
   width: 180px;
   height: 32px;
@@ -131,9 +151,8 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
   background: rgba(0, 0, 0, 0.3);
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
   border: 1px solid #bbb;
+  border-left: none;
   border-right: none;
   vertical-align:middle;
   color: #ddd;
@@ -141,6 +160,7 @@ body {
 #input-area #btn-youtubes,
 #input-area #btn-tstreams {
   height: 32px;
+  width: 60px;
   padding:0 5px;
   margin:0;
   border: none;
