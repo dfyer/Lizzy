@@ -108,12 +108,24 @@ function buildTwitchList(result) {
 
   for (let i = 0; i < result.streams.length; i++) {
     let li = ul.appendChild(document.createElement('li'));
-    let a = li.appendChild(document.createElement('a'));
-    a.href = result.streams[i].channel.url;
+
+    // Stream Preview
+    let stream = li.appendChild(document.createElement('a'));
+    stream.href = result.streams[i].channel.url;
     let thumbnail = document.createElement('img');
     thumbnail.setAttribute('src', result.streams[i].preview.medium);
-    a.appendChild(thumbnail);
-    a.appendChild(document.createTextNode(result.streams[i].channel.status));
+    stream.appendChild(thumbnail);
+    stream.appendChild(document.createTextNode(result.streams[i].channel.status));
+
+    // Channel Info
+    let channel = li.appendChild(document.createElement('a'));
+    channel.href = result.streams[i].channel.url;
+    let logo = document.createElement('img');
+    logo.setAttribute('src', result.streams[i].channel.logo);
+    channel.appendChild(logo);
+    channel.appendChild(document.createTextNode(result.streams[i].channel.display_name));
+    channel.appendChild(document.createTextNode(result.streams[i].channel.game));
+    channel.appendChild(document.createTextNode(result.streams[i].viewers));
   }
 
   // Set display
