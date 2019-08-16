@@ -136,6 +136,24 @@ body {
 #input-area #youtube-icon #youtube-icon-wrapper {
     line-height:30px;
 }
+#input-area #twitch-icon {
+  display: inline-block;
+  height: 26px;
+  width:32px;
+  padding:2px 5px;
+  margin:0;
+  border: none;
+  vertical-align:middle;
+  background: #3a2569;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border: 1px solid #bbb;
+  cursor:pointer;
+  color: #fff;
+}
+#input-area #twitch-icon #twitch-icon-wrapper {
+  line-height:30px;
+}
 #input-area #q-string {
   width: 180px;
   height: 32px;
@@ -176,7 +194,6 @@ body {
   color: #bbb;
 }
 #input-area #btn-tstreams {
-  display:none;
 }
 /* Search Form */
 /*** HEADER ROW ***/

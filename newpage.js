@@ -223,6 +223,8 @@ function loadYoutube() {
   };
   xhr.open("GET", youtubeUrl);
   xhr.send();
+  document.getElementById("youtube-icon").style.display = "none";
+  document.getElementById("twitch-icon").style.display = "inline-block";
 }
 
 function loadTwitch() {
@@ -241,6 +243,8 @@ function loadTwitch() {
   xhr.open("GET", twitchUrl);
   xhr.setRequestHeader('client-id', '8l9vm9cnwt8poml5ioqogcnljkmgxl');
   xhr.send();
+  document.getElementById("youtube-icon").style.display = "inline-block";
+  document.getElementById("twitch-icon").style.display = "none";
 }
 
 // Initializers
@@ -258,7 +262,8 @@ window.onload = function() {
 document.addEventListener('DOMContentLoaded', function() {
   // Bind Event Handlers
   document.getElementById("btn-youtubes").addEventListener("click", loadYoutube);
-  document.getElementById("btn-tstreams").addEventListener("click", loadTwitch);
+  document.getElementById("youtube-icon").addEventListener("click", loadYoutube);
+  document.getElementById("twitch-icon").addEventListener("click", loadTwitch);
 
   // Bind key
   document.getElementById("q-string").addEventListener("keyup", function(event) {
