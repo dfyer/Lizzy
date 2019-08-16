@@ -1,3 +1,10 @@
+// Utils
+function parseText(encodedStr) {
+  var parser = new DOMParser;
+  var dom = parser.parseFromString('<!doctype html><body>' + encodedStr, 'text/html');
+  var decodedStr = dom.body.textContent;
+  return decodedStr
+}
 // Time
 function getDayOfWeek(idx) {
   if (idx == 0) { return "Sunday"; }
@@ -78,10 +85,10 @@ function buildYoutubesList(result, detail) {
     let li = ul.appendChild(document.createElement('li'));
     let a = li.appendChild(document.createElement('a'));
     a.href = "https://www.youtube.com/watch?v=" + result.items[i].id.videoId;
-    let thumbnail = document.createElement('img');
-    thumbnail.setAttribute('src', result.items[i].snippet.thumbnails.medium.url);
-    a.appendChild(thumbnail);
-    a.appendChild(document.createTextNode(result.items[i].snippet.title));
+    //let thumbnail = document.createElement('img');
+    //thumbnail.setAttribute('src', result.items[i].snippet.thumbnails.medium.url);
+    //a.appendChild(thumbnail);
+    a.appendChild(document.createTextNode(parseText(result.items[i].snippet.title)));
   }
 
   // Set display
@@ -115,7 +122,7 @@ function buildTwitchList(result) {
     let thumbnail = document.createElement('img');
     thumbnail.setAttribute('src', result.streams[i].preview.medium);
     stream.appendChild(thumbnail);
-    stream.appendChild(document.createTextNode(result.streams[i].channel.status));
+    stream.appendChild(document.createTextNode(parseText(result.streams[i].channel.status)));
 
     // Channel Info
     let channel = li.appendChild(document.createElement('a'));
@@ -123,7 +130,7 @@ function buildTwitchList(result) {
     let logo = document.createElement('img');
     logo.setAttribute('src', result.streams[i].channel.logo);
     channel.appendChild(logo);
-    channel.appendChild(document.createTextNode(result.streams[i].channel.display_name));
+    channel.appendChild(document.createTextNode(parseText(result.streams[i].channel.display_name)));
     channel.appendChild(document.createTextNode(result.streams[i].channel.game));
     channel.appendChild(document.createTextNode(result.streams[i].viewers));
   }
@@ -165,6 +172,15 @@ function loadYoutube() {
     });
   }
   else {
+    youtubeUrl = cookUrl("https://www.googleapis.com/youtube/v3/guideCategories", {
+      q: encodeURI(qstr),
+      part: "snippet",
+      key: APIKey,
+      regionCode: "KR",
+      maxResults: 10
+    });
+    recommended = false;
+    /*
     youtubeUrl = cookUrl("https://www.googleapis.com/youtube/v3/search", {
       q: encodeURI(qstr),
       part: "snippet",
@@ -175,6 +191,7 @@ function loadYoutube() {
       maxResults: 10
     });
     recommended = false;
+    */
   }
 
   console.log(youtubeUrl);

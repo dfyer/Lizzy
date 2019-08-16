@@ -14,7 +14,6 @@ body {
   /*background-image: url("wallpaper.jpg");*/
 }
 #content {
-  width: 900px;
   min-height: 1080px;
   min-height: 100vh;
   margin: auto;
