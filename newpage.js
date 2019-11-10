@@ -41,31 +41,75 @@ function getTime() {
 }
 
 // Result Builders
-function buildTopsitesList(mostVisitedURLs) {
-  // Hide other results
-  hideResults();
+function buildBookmarks(idStr) {
+  // Remove exsiting search result
+  let bms = document.getElementById('bookmarks');
+  let child = bms.lastChild;
+  while (child) {
+    bms.removeChild(child);
+    child = bms.lastChild;
+  }
+  chrome.bookmarks.get(idStr, buildBookmarksControl);
+  chrome.bookmarks.getChildren(idStr, buildBookmarksList);
+}
+function buildBookmarksControl(bookmark) {
+  console.log(bookmark);
+  if (bookmark[0] && bookmark[0].parentId) {
+    let bms = document.getElementById('bookmarks');
+    let control = bms.appendChild(document.createElement('div'));
+    control.setAttribute('class', 'ts-wrapper-control');
+    control.setAttribute('id', 'load-parent-bookmarks');
 
-  let favicons = document.getElementById('topsites-favicons');
-  for (var i = 0; i < mostVisitedURLs.length; i++) {
-    let div = favicons.appendChild(document.createElement('div'));
-    if (i == 0) {
-      div.setAttribute('class', 'favicon-wrapper favicon-wrapper-first');
+    let favicon = document.createElement('i');
+    favicon.setAttribute('class', 'material-icons-outlined');
+    favicon.appendChild(document.createTextNode('arrow_back'));
+    control.appendChild(favicon);
+
+    control.addEventListener("click", function() {
+      buildBookmarks(bookmark[0].parentId);
+    });
+  }
+}
+function buildBookmarksList(bookmarkURLs) {
+  console.log(bookmarkURLs);
+
+  let bms = document.getElementById('bookmarks');
+  for (var i = 0; i < bookmarkURLs.length; i++) {
+    let bookmarkItem = bookmarkURLs[i];
+    let a = bms.appendChild(document.createElement('a'));
+    a.setAttribute('class', 'ts-wrapper');
+
+    if (bookmarkItem.dateGroupModified) {
+      // Group: <i class="material-icons">folder</i>
+      let favicon = document.createElement('img');
+      favicon.setAttribute('src', 'folder_icon_16x16.png');
+      favicon.appendChild(document.createTextNode('folder'));
+      a.setAttribute('title', bookmarkItem.title);
+      a.appendChild(favicon);
+
+      let span = a.appendChild(document.createElement('span'));
+      span.appendChild(document.createTextNode(parseText(bookmarkItem.title)));
+      a.appendChild(span);
+
+      a.addEventListener("click", function() {
+        buildBookmarks(bookmarkItem.id);
+      });
     } else {
-      div.setAttribute('class', 'favicon-wrapper');
+      // URL
+      let favicon = document.createElement('img');
+      favicon.setAttribute('src', 'http://www.google.com/s2/favicons?domain=' + bookmarkURLs[i].url);
+      a.href = bookmarkURLs[i].url;
+      a.setAttribute('title', bookmarkURLs[i].title);
+      a.appendChild(favicon);
+
+      let span = a.appendChild(document.createElement('span'));
+      span.appendChild(document.createTextNode(parseText(bookmarkURLs[i].title)));
+      a.appendChild(span);
     }
-    let a = div.appendChild(document.createElement('a'));
-    a.href = mostVisitedURLs[i].url;
-    a.setAttribute('title', mostVisitedURLs[i].title);
-    let favicon = document.createElement('img');
-    favicon.setAttribute('src', 'http://www.google.com/s2/favicons?domain=' + mostVisitedURLs[i].url);
-    a.appendChild(favicon);
   }
 }
 
 function buildYoutubesList(result, detail) {
-  // Hide other results
-  hideResults();
-
   console.log(result);
   console.log(detail);
 
@@ -96,43 +140,54 @@ function buildYoutubesList(result, detail) {
 }
 
 function buildTwitchList(result) {
-  // Hide other results
-  hideResults();
-
   console.log(result);
 
   // Build search result
   let tstreamDiv = document.getElementById("tstreams");
-  // Remove exsiting search result
-  let child = tstreamDiv.lastChild;
-  while (child) {
-    tstreamDiv.removeChild(child);
-    child = tstreamDiv.lastChild;
-  }
   // Add new search result
-  let ul = tstreamDiv.appendChild(document.createElement('ul'));
-  ul.setAttribute("id", "tstreams-ul");
-
   for (let i = 0; i < result.streams.length; i++) {
-    let li = ul.appendChild(document.createElement('li'));
-
-    // Stream Preview
-    let stream = li.appendChild(document.createElement('a'));
+    let div = tstreamDiv.appendChild(document.createElement('div'));
+    div.setAttribute('class', 'stream-wrapper');
+    let stream = div.appendChild(document.createElement('a'));
     stream.href = result.streams[i].channel.url;
+    stream.title = parseText(result.streams[i].channel.status);
+
+    // Stream thumbnail
+    let thumbnail_wrapper = document.createElement('div');
+    thumbnail_wrapper.setAttribute('class', 'thumbnail');
     let thumbnail = document.createElement('img');
     thumbnail.setAttribute('src', result.streams[i].preview.medium);
-    stream.appendChild(thumbnail);
-    stream.appendChild(document.createTextNode(parseText(result.streams[i].channel.status)));
+    thumbnail_wrapper.appendChild(thumbnail);
+    stream.appendChild(thumbnail_wrapper)
 
     // Channel Info
-    let channel = li.appendChild(document.createElement('a'));
-    channel.href = result.streams[i].channel.url;
+    let info_wrapper = document.createElement('div');
+    info_wrapper.setAttribute('class', 'info');
     let logo = document.createElement('img');
+    logo.setAttribute('class', 'logo');
     logo.setAttribute('src', result.streams[i].channel.logo);
-    channel.appendChild(logo);
-    channel.appendChild(document.createTextNode(parseText(result.streams[i].channel.display_name)));
-    channel.appendChild(document.createTextNode(result.streams[i].channel.game));
-    channel.appendChild(document.createTextNode(result.streams[i].viewers));
+    info_wrapper.appendChild(logo);
+    let titles = document.createElement('div');
+    titles.setAttribute('class', 'titles');
+    let title = document.createElement('div');
+    title.setAttribute('class', 'title');
+    title.appendChild(document.createTextNode(parseText(result.streams[i].channel.status)));
+    titles.appendChild(title);
+    let name = document.createElement('div');
+    name.setAttribute('class', 'name');
+    name.appendChild(document.createTextNode(parseText(result.streams[i].channel.display_name)));
+    titles.appendChild(name);
+    let game = document.createElement('div');
+    game.setAttribute('class', 'game');
+    game.appendChild(document.createTextNode(parseText(result.streams[i].channel.game)));
+    titles.appendChild(game);
+    info_wrapper.appendChild(titles);
+    let viewers = document.createElement('div');
+    viewers.setAttribute('class', 'viewers');
+    viewers.innerHTML = '<i class="material-icons">lens</i> ';
+    viewers.innerHTML += parseText(result.streams[i].viewers);
+    info_wrapper.appendChild(viewers);
+    stream.appendChild(info_wrapper);
   }
 
   // Set display
@@ -140,11 +195,6 @@ function buildTwitchList(result) {
 }
 
 // Helper for result builders
-function hideResults() {
-  //document.getElementById('topsites').setAttribute("style", "display:none;");
-  document.getElementById('youtubes').setAttribute("style", "display:none;");
-  document.getElementById('tstreams').setAttribute("style", "display:none;");
-}
 function cookUrl(baseUrl, params) {
   let retUrl = baseUrl + "?";
   for (let param in params) {
@@ -240,34 +290,58 @@ function loadYoutube() {
   };
   xhr.open("GET", youtubeUrl);
   xhr.send();
-  document.getElementById("youtube-icon").style.display = "none";
-  document.getElementById("twitch-icon").style.display = "inline-block";
+}
+
+function createState() {
+  const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let array = new Uint8Array(40);
+  window.crypto.getRandomValues(array);
+  array = array.map(x => validChars.charCodeAt(x % validChars.length));
+  const randomState = String.fromCharCode.apply(null, array);
+  return randomState
+}
+
+function authTwitch() {
+  let twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize"
+  twitchAuthUrl += "?client_id=8l9vm9cnwt8poml5ioqogcnljkmgxl"
+  twitchAuthUrl += "&redirect_uri=http://localhost"
+  twitchAuthUrl += "&response_type=token"
+  twitchAuthUrl += "&scope=viewing_activity_read"
+  twitchAuthUrl += "&state=" + createState()
+  // Create and send request with XHR
+  let xhr = new XMLHttpRequest()
+  xhr.open("GET", twitchAuthUrl)
+  xhr.setRequestHeader('client_id', '8l9vm9cnwt8poml5ioqogcnljkmgxl');
+  xhr.setRequestHeader('client_id', '8l9vm9cnwt8poml5ioqogcnljkmgxl');
+  xhr.setRequestHeader('client_id', '8l9vm9cnwt8poml5ioqogcnljkmgxl');
+  xhr.setRequestHeader('redirect_uri', 'http://localhost');
+  xhr.send()
 }
 
 function loadTwitch() {
-  let twitchUrl = "https://api.twitch.tv/kraken/streams/followed";
-
-  console.log(twitchUrl);
+  authTwitch()
+  let twitchUserUrl = "https://api.twitch.tv/kraken/streams/followed"
 
   // Create and send request with XHR
   let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if (xhr.readyState === xhr.DONE) {
       let result = JSON.parse(xhr.responseText);
-      buildTwitchList(result);
+      buildTwitchList(result)
     }
   };
-  xhr.open("GET", twitchUrl);
-  xhr.setRequestHeader('client-id', '8l9vm9cnwt8poml5ioqogcnljkmgxl');
+  xhr.open("GET", twitchUserUrl);
+  xhr.setRequestHeader('Accept', 'application/vnd.twitchtv.v5+json');
+  xhr.setRequestHeader('Client-ID', '8l9vm9cnwt8poml5ioqogcnljkmgxl');
   xhr.send();
-  document.getElementById("youtube-icon").style.display = "inline-block";
-  document.getElementById("twitch-icon").style.display = "none";
 }
+
+
 
 // Initializers
 window.onload = function() {
   // Top sites and twitch streams are initialized
-  chrome.topSites.get(buildTopsitesList);
+  buildBookmarks('1');
   loadTwitch();
   // Time
   getTime();
@@ -278,18 +352,4 @@ window.onload = function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   // Bind Event Handlers
-  document.getElementById("btn-youtubes").addEventListener("click", loadYoutube);
-  document.getElementById("youtube-icon").addEventListener("click", loadYoutube);
-  document.getElementById("twitch-icon").addEventListener("click", loadTwitch);
-
-  // Bind key
-  document.getElementById("q-string").addEventListener("keyup", function(event) {
-    // Number 13 is the "Enter" key on the keyboard
-    if (event.keyCode === 13) {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      document.getElementById("btn-youtubes").click();
-    }
-  });
 });

@@ -28,6 +28,7 @@
     "permissions": [
         "https://www.googleapis.com/youtube/",
         "tabs",
-        "topSites"
+        "topSites",
+        "bookmarks"
     ]
 }
